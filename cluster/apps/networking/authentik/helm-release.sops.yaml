@@ -1,0 +1,70 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+    name: authentik
+    namespace: networking
+spec:
+    interval: 15m
+    chart:
+        spec:
+            chart: authentik
+            version: 2022.8.3
+            sourceRef:
+                kind: HelmRepository
+                name: authentik
+                namespace: flux-system
+            interval: 15m
+    install:
+        createNamespace: true
+        remediation:
+            retries: 5
+    upgrade:
+        remediation:
+            retries: 5
+    values:
+        authentik:
+            secret_key: ENC[AES256_GCM,data:eOp+ZmSqs9wkOe+zXAmwW/Om1o0G5p041kE1FD+hR5AjMPowtiJJ3y+fTW1RXSDbUcw=,iv:wghgS2RGTXrUXP5Xy2wG5KSkhR1uT+cGf9WNHe4RnrU=,tag:bRkB6l/xJr2bX0OJyK0DyA==,type:str]
+            error_reporting:
+                enabled: true
+            postgresql:
+                password: ENC[AES256_GCM,data:t8OqZmWaWsM+7CqS9pHWxg==,iv:I8NVMxVBeeA7SNUt1v4LKkTBJmPJbCdGwyDwJErp9KM=,tag:K76l6QuNVPrGe9LE9PVQAQ==,type:str]
+        ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+                cert-manager.io/cluster-issuer: letsencrypt-production
+                nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+            hosts:
+                - host: authentik.${SECRET_DOMAIN}
+                  paths:
+                    - path: /
+                      pathType: Prefix
+            tls:
+                - hosts:
+                    - authentik.${SECRET_DOMAIN}
+                  secretName: authentik-tls
+        postgresql:
+            enabled: true
+            postgresqlPassword: ENC[AES256_GCM,data:/i3LfZuGyFxDrmiiXuGdsg==,iv:H558VPrg+341OSLk8miR6JJsDYYyBQF3yCSjmknY7sI=,tag:gB4YEHLM7WeCCHRskodpzg==,type:str]
+        redis:
+            enabled: true
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age19ths8xeh3s069gre6lfc845ksavkdpk2u2usqldux00ta80qugpsx8v8jf
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBodmpENmtReFpjZGpGaFBr
+            U2JKSlhIRVlUaTIxRlBjNjc2Z1VsSW9jV3hvCkxGa2l0U09pbFBJczNwTzRlYXJl
+            WkZMaG1vcEdtbnBmZGx0NE9ia3Z4SWMKLS0tIERNZWdXU05EMUY1MnphY29lbDlx
+            OHphUlZoeC80Zm5uZTN0OWNJZnBadjgKcKisBsXPD4kD/avL1FNq9f6QiVcudcsP
+            V+Fo/9ERfdK+5hOtXrp0Z8SY44E08zefWFlENeaG63sI6wlEWHsSaQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2022-08-23T05:46:56Z"
+    mac: ENC[AES256_GCM,data:Xpm6lBdO6VSNtliOLjwRke4yBgkPUictH+9BIWnlqAS61pNIIdGi1EYmWu5GXpmY8vhTJaBfJ6/ZpjDb8LUWfbDfzs7eMJJr67BlwlV915vpzBEq9TGq/j1v2Xj0Qzv9kp+a0+mbJYSx+MnHUaAX44n5n2q5e3LKK2cwF1FgJjE=,iv:VI1ommOnKmHdAd+U6uU+Jw7mhQfAtymctby232308s4=,tag:121NCLPMFqXq1Lu6hvjjtQ==,type:str]
+    pgp: []
+    encrypted_regex: postgresqlPassword|password|secret_key
+    version: 3.7.3
