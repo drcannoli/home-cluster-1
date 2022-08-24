@@ -23,17 +23,18 @@ spec:
             retries: 5
     values:
         authentik:
-            secret_key: ENC[AES256_GCM,data:eOp+ZmSqs9wkOe+zXAmwW/Om1o0G5p041kE1FD+hR5AjMPowtiJJ3y+fTW1RXSDbUcw=,iv:wghgS2RGTXrUXP5Xy2wG5KSkhR1uT+cGf9WNHe4RnrU=,tag:bRkB6l/xJr2bX0OJyK0DyA==,type:str]
+            secret_key: ENC[AES256_GCM,data:kfVF4nJfqCrekoonCeIPyzab7/dNSSMLjJRGsObnEksfWNOY/ynDbjMGXCVJjsyYk/M=,iv:cJBoEQ6x85fxk0CgZZfGlngYkjYR1gG2SFCeyJ+dzLA=,tag:Y2umTVG3pCpi4HELbhgkeA==,type:str]
             error_reporting:
                 enabled: true
             postgresql:
-                password: ENC[AES256_GCM,data:t8OqZmWaWsM+7CqS9pHWxg==,iv:I8NVMxVBeeA7SNUt1v4LKkTBJmPJbCdGwyDwJErp9KM=,tag:K76l6QuNVPrGe9LE9PVQAQ==,type:str]
+                password: ENC[AES256_GCM,data:u1pqbtMS58zs+bhgrraoYw==,iv:DylclQXA93lGUcRi6D65ZcKVAWahgx56CrfmjtZ76gk=,tag:hoVlsVfJMB430LajrtQu/g==,type:str]
         ingress:
             enabled: true
             ingressClassName: nginx
             annotations:
                 cert-manager.io/cluster-issuer: letsencrypt-production
-                nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+                external-dns/is-public: "true"
+                external-dns.alpha.kubernetes.io/target: ipv4.${SECRET_DOMAIN}
             hosts:
                 - host: authentik.${SECRET_DOMAIN}
                   paths:
@@ -45,7 +46,7 @@ spec:
                   secretName: authentik-tls
         postgresql:
             enabled: true
-            postgresqlPassword: ENC[AES256_GCM,data:/i3LfZuGyFxDrmiiXuGdsg==,iv:H558VPrg+341OSLk8miR6JJsDYYyBQF3yCSjmknY7sI=,tag:gB4YEHLM7WeCCHRskodpzg==,type:str]
+            postgresqlPassword: ENC[AES256_GCM,data:QJ1O0vsAP3fxlobbMjVyNw==,iv:z6yZFyFbcY2PVxUsf0mADT1Z9hSvfaBppLU6vY9dx58=,tag:O7DQmsW4In6srQ7trT61Kw==,type:str]
         redis:
             enabled: true
 sops:
@@ -57,14 +58,14 @@ sops:
         - recipient: age19ths8xeh3s069gre6lfc845ksavkdpk2u2usqldux00ta80qugpsx8v8jf
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBodmpENmtReFpjZGpGaFBr
-            U2JKSlhIRVlUaTIxRlBjNjc2Z1VsSW9jV3hvCkxGa2l0U09pbFBJczNwTzRlYXJl
-            WkZMaG1vcEdtbnBmZGx0NE9ia3Z4SWMKLS0tIERNZWdXU05EMUY1MnphY29lbDlx
-            OHphUlZoeC80Zm5uZTN0OWNJZnBadjgKcKisBsXPD4kD/avL1FNq9f6QiVcudcsP
-            V+Fo/9ERfdK+5hOtXrp0Z8SY44E08zefWFlENeaG63sI6wlEWHsSaQ==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBhaXFWcGZXRy8rRC94aFha
+            R0JnZnpIeFlFUGJwMGFqRi82dTRCMk9CeXlRCi9TblhXRUlkNjlwYkVGSUFUOWRH
+            Yk5aallZRFpBakp2Q2xscyt6SnBqWkEKLS0tIGdxbExGOWR3Tktzb0E4eGRGUjhE
+            eVpnWEJNUGlIWVFQNStQSjhkRmp0VlEKc9IjrhRl+y5hjW7hpdn70PGl6LJiwARq
+            b9KsvrCQLEiRNVL985FYZfNG/AjZfIJGdvLMCWl7j6FmrKQIQegXbg==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2022-08-23T05:46:56Z"
-    mac: ENC[AES256_GCM,data:Xpm6lBdO6VSNtliOLjwRke4yBgkPUictH+9BIWnlqAS61pNIIdGi1EYmWu5GXpmY8vhTJaBfJ6/ZpjDb8LUWfbDfzs7eMJJr67BlwlV915vpzBEq9TGq/j1v2Xj0Qzv9kp+a0+mbJYSx+MnHUaAX44n5n2q5e3LKK2cwF1FgJjE=,iv:VI1ommOnKmHdAd+U6uU+Jw7mhQfAtymctby232308s4=,tag:121NCLPMFqXq1Lu6hvjjtQ==,type:str]
+    lastmodified: "2022-08-24T03:45:07Z"
+    mac: ENC[AES256_GCM,data:DSyGSHu7t5N6cu7bkT66i9gwPC7hnEbwXHn1R47B0tP5SdKKBUTCD8Ugi4JAeXwe6LJ39rhm/aPvS2HckGHzOydmgV7SWbbvxegvVzStGZcztbjQxvp3Q9z4Yt6O38DTLzzYaoGhIkatNqMYLWUpTi3hGNetWXvUaz0FDUiQ9qc=,iv:u0JU5vTI7GhpYNqPvvl0lJQP8PzqRfzFR4CpWLxVXcI=,tag:1gTP6useJ10zLfrKLgu9tQ==,type:str]
     pgp: []
     encrypted_regex: postgresqlPassword|password|secret_key
     version: 3.7.3
